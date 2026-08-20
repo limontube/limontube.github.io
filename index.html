@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Limon Boncuk Çicikuş - Videolar</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: #f5f7fb;
+        color: #222;
+    }
+
+    .container {
+        width: 100%;
+        max-width: 1200px;
+        margin: auto;
+        padding: 20px;
+    }
+
+    .header {
+        background: white;
+        border-radius: 18px;
+        padding: 22px;
+        margin-bottom: 20px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        text-align: center;
+    }
+
+    .header h1 {
+        margin: 0 0 8px;
+        font-size: 28px;
+    }
+
+    .header p {
+        margin: 0 0 18px;
+        color: #666;
+    }
+
+    .buttons {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    button,
+    .youtube-button {
+        border: none;
+        padding: 11px 18px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: bold;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .channel-button {
+        background: #ff0000;
+        color: white;
+    }
+
+    .refresh-button {
+        background: #222;
+        color: white;
+    }
+
+    .search-box {
+        width: 100%;
+        padding: 13px 16px;
+        margin-top: 18px;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        font-size: 15px;
+        outline: none;
+    }
+
+    .search-box:focus {
+        border-color: #888;
+    }
+
+    #status {
+        text-align: center;
+        margin: 20px 0;
+        color: #666;
+    }
+
+    .videos {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+    }
+
+    .video-card {
+        background: white;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .video-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+    }
+
+    .thumbnail {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        object-fit: cover;
+        display: block;
+    }
+
+    .video-content {
+        padding: 15px;
+    }
+
+    .video-title {
+        font-size: 16px;
+        font-weight: bold;
+        line-height: 1.4;
+        margin-bottom: 8px;
+    }
+
+    .video-date {
+        color: #777;
+        font-size: 13px;
+        margin-bottom: 14px;
+    }
+
+    .video-buttons {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .watch-button {
+        background: #111;
+        color: white;
+    }
+
+    .youtube-button {
+        background: #ff0000;
+        color: white;
+    }
+
+    .empty {
+        text-align: center;
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        color: #777;
+    }
+
+    .loading {
+        text-align: center;
+        padding: 40px;
+        font-size: 16px;
+    }
+
+    @media (max-width: 600px) {
+        .container {
+            padding: 12px;
+        }
+
+        .header h1 {
+            font-size: 23px;
+        }
+
+        .videos {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+
+        <h1>🐦 Limon Boncuk Çicikuş</h1>
+
+        <p>YouTube kanalındaki videolar</p>
+
+        <div class="buttons">
+
+            <a
+                class="youtube-button channel-button"
+                href="https://www.youtube.com/@LimonBoncukCicikus"
+                target="_blank">
+                📺 Kanala Git
+            </a>
+
+            <button
+                class="refresh-button"
+                onclick="loadVideos(true)">
+                🔄 Yenile
+            </button>
+
+        </div>
+
+        <input
+            id="search"
+            class="search-box"
+            type="text"
+            placeholder="🔍 Videolarda ara..."
+            oninput="filterVideos()">
+
+    </div>
+
+    <div id="status">
+        Videolar yükleniyor...
+    </div>
+
+    <div id="videos" class="videos"></div>
+
+</div>
+
+<script>
+
+    /*
+        ============================================================
+        AYARLAR
+        ============================================================
+    */
+
+    const API_KEY = "AIzaSyBzTN3E8ZmWbtdXNXKH4Z5C_u2X1bFGiQg";
+
+    const CHANNEL_HANDLE = "@LimonBoncukCicikus";
+
+    const CHANNEL_URL =
+        "https://www.youtube.com/@LimonBoncukCicikus";
+
+
+    /*
+        ============================================================
+        GLOBAL DEĞİŞKENLER
+        ============================================================
+    */
+
+    let allVideos = [];
+
+
+    /*
+        ============================================================
+        KANAL BİLGİSİNİ AL
+        ============================================================
+    */
+
+    async function getChannel() {
+
+        const url =
+            "https://www.googleapis.com/youtube/v3/channels" +
+            "?part=contentDetails,snippet" +
+            "&forHandle=" + encodeURIComponent(CHANNEL_HANDLE) +
+            "&key=" + encodeURIComponent(API_KEY);
+
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error(
+                "Kanal bilgisi alınamadı. HTTP " +
+                response.status
+            );
+        }
+
+        const data = await response.json();
+
+        if (!data.items || data.items.length === 0) {
+            throw new Error("Kanal bulunamadı.");
+        }
+
+        return data.items[0];
+    }
+
+
+    /*
+        ============================================================
+        TÜM VİDEOLARI AL
+        ============================================================
+    */
+
+    async function getAllVideos(uploadPlaylistId) {
+
+        let videos = [];
+
+        let nextPageToken = "";
+
+        do {
+
+            let url =
+                "https://www.googleapis.com/youtube/v3/playlistItems" +
+                "?part=snippet,contentDetails" +
+                "&playlistId=" + encodeURIComponent(uploadPlaylistId) +
+                "&maxResults=50" +
+                "&key=" + encodeURIComponent(API_KEY);
+
+            if (nextPageToken) {
+
+                url +=
+                    "&pageToken=" +
+                    encodeURIComponent(nextPageToken);
+
+            }
+
+            const response = await fetch(url);
+
+            if (!response.ok) {
+                throw new Error(
+                    "Videolar alınamadı. HTTP " +
+                    response.status
+                );
+            }
+
+            const data = await response.json();
+
+            if (data.items) {
+
+                for (const item of data.items) {
+
+                    if (
+                        item.snippet &&
+                        item.contentDetails &&
+                        item.contentDetails.videoId
+                    ) {
+
+                        videos.push({
+
+                            id: item.contentDetails.videoId,
+
+                            title:
+                                item.snippet.title,
+
+                            description:
+                                item.snippet.description,
+
+                            date:
+                                item.snippet.publishedAt,
+
+                            thumbnail:
+                                item.snippet.thumbnails?.high?.url ||
+                                item.snippet.thumbnails?.medium?.url ||
+                                item.snippet.thumbnails?.default?.url
+
+                        });
+
+                    }
+
+                }
+
+            }
+
+            nextPageToken =
+                data.nextPageToken || "";
+
+        } while (nextPageToken);
+
+        return videos;
+    }
+
+
+    /*
+        ============================================================
+        VİDEOLARI EKRANA BAS
+        ============================================================
+    */
+
+    function renderVideos(videos) {
+
+        const container =
+            document.getElementById("videos");
+
+        container.innerHTML = "";
+
+        if (!videos.length) {
+
+            container.innerHTML =
+                `<div class="empty">
+                    Gösterilecek video bulunamadı.
+                </div>`;
+
+            return;
+        }
+
+        videos.forEach(video => {
+
+            const card =
+                document.createElement("div");
+
+            card.className = "video-card";
+
+            const formattedDate =
+                new Date(video.date)
+                    .toLocaleDateString("tr-TR", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric"
+                    });
+
+            card.innerHTML = `
+
+                <img
+                    class="thumbnail"
+                    src="${escapeHtml(video.thumbnail)}"
+                    alt="${escapeHtml(video.title)}"
+                    loading="lazy">
+
+                <div class="video-content">
+
+                    <div class="video-title">
+                        ${escapeHtml(video.title)}
+                    </div>
+
+                    <div class="video-date">
+                        📅 ${formattedDate}
+                    </div>
+
+                    <div class="video-buttons">
+
+                        <button
+                            class="watch-button"
+                            onclick="openPlayer('${video.id}')">
+                            ▶️ Sitede İzle
+                        </button>
+
+                        <a
+                            class="youtube-button"
+                            href="https://www.youtube.com/watch?v=${video.id}"
+                            target="_blank">
+                            🔴 YouTube
+                        </a>
+
+                    </div>
+
+                </div>
+
+            `;
+
+            container.appendChild(card);
+
+        });
+
+    }
+
+
+    /*
+        ============================================================
+        YOUTUBE OYNATICI
+        ============================================================
+    */
+
+    function openPlayer(videoId) {
+
+        const overlay =
+            document.createElement("div");
+
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "rgba(0,0,0,0.85)";
+        overlay.style.zIndex = "999999";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.padding = "20px";
+
+        overlay.innerHTML = `
+
+            <div style="
+                width:100%;
+                max-width:1000px;
+                background:#000;
+                border-radius:15px;
+                overflow:hidden;
+                position:relative;
+            ">
+
+                <button
+                    onclick="this.closest('.player-overlay').remove()"
+                    style="
+                        position:absolute;
+                        right:10px;
+                        top:10px;
+                        z-index:5;
+                        background:rgba(0,0,0,.7);
+                        color:white;
+                        border:none;
+                        border-radius:50%;
+                        width:40px;
+                        height:40px;
+                        font-size:20px;
+                        cursor:pointer;
+                    ">
+                    ×
+                </button>
+
+                <div style="
+                    position:relative;
+                    width:100%;
+                    aspect-ratio:16/9;
+                ">
+
+                    <iframe
+                        src="https://www.youtube.com/embed/${videoId}?autoplay=1"
+                        style="
+                            position:absolute;
+                            inset:0;
+                            width:100%;
+                            height:100%;
+                            border:0;
+                        "
+                        allow="
+                            autoplay;
+                            encrypted-media;
+                            picture-in-picture;
+                            fullscreen
+                        "
+                        allowfullscreen>
+                    </iframe>
+
+                </div>
+
+            </div>
+        `;
+
+        overlay.className =
+            "player-overlay";
+
+        document.body.appendChild(overlay);
+
+    }
+
+
+    /*
+        ============================================================
+        ARAMA
+        ============================================================
+    */
+
+    function filterVideos() {
+
+        const search =
+            document
+                .getElementById("search")
+                .value
+                .toLowerCase()
+                .trim();
+
+        if (!search) {
+
+            renderVideos(allVideos);
+
+            return;
+        }
+
+        const filtered =
+            allVideos.filter(video =>
+                video.title
+                    .toLowerCase()
+                    .includes(search)
+            );
+
+        renderVideos(filtered);
+
+    }
+
+
+    /*
+        ============================================================
+        GÜVENLİ HTML
+        ============================================================
+    */
+
+    function escapeHtml(text) {
+
+        const div =
+            document.createElement("div");
+
+        div.textContent =
+            text;
+
+        return div.innerHTML;
+    }
+
+
+    /*
+        ============================================================
+        ANA YÜKLEME
+        ============================================================
+    */
+
+    async function loadVideos(showLoading = true) {
+
+        const status =
+            document.getElementById("status");
+
+        try {
+
+            if (showLoading) {
+
+                status.innerHTML =
+                    "⏳ Videolar yükleniyor...";
+
+            }
+
+            const channel =
+                await getChannel();
+
+            const uploadsPlaylist =
+                channel.contentDetails
+                    .relatedPlaylists
+                    .uploads;
+
+            allVideos =
+                await getAllVideos(
+                    uploadsPlaylist
+                );
+
+            renderVideos(allVideos);
+
+            status.innerHTML =
+                `✅ ${allVideos.length} video bulundu`;
+
+        }
+
+        catch (error) {
+
+            console.error(error);
+
+            status.innerHTML =
+                `
+                ❌ Videolar yüklenemedi.<br><br>
+
+                <small>
+                    ${escapeHtml(error.message)}
+                </small>
+                `;
+
+        }
+
+    }
+
+
+    /*
+        ============================================================
+        BAŞLAT
+        ============================================================
+    */
+
+    loadVideos();
+
+</script>
+
+</body>
+</html>
