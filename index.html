@@ -1,184 +1,367 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Limon Boncuk Çicikuş - Videolar</title>
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+<title>Limon Boncuk - Videolar</title>
+
+<!-- Google Identity Services -->
+<script
+    src="https://accounts.google.com/gsi/client"
+    async
+    defer>
+</script>
 
 <style>
-    * {
-        box-sizing: border-box;
-    }
 
-    body {
-        margin: 0;
-        font-family: Arial, Helvetica, sans-serif;
-        background: #f5f7fb;
-        color: #222;
-    }
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f5f7fb;
+    color: #222;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+}
+
+.header {
+    background: white;
+    border-radius: 18px;
+    padding: 22px;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    text-align: center;
+}
+
+.header h1 {
+    margin: 0 0 8px;
+    font-size: 28px;
+}
+
+.header p {
+    margin: 0 0 18px;
+    color: #666;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+button,
+.youtube-button,
+.login-button {
+    border: none;
+    padding: 11px 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.channel-button {
+    background: #ff0000;
+    color: white;
+}
+
+.refresh-button {
+    background: #222;
+    color: white;
+}
+
+.login-button {
+    background: #4285f4;
+    color: white;
+}
+
+.logout-button {
+    background: #e7e7e7;
+    color: #222;
+}
+
+.search-box {
+    width: 100%;
+    padding: 13px 16px;
+    margin-top: 18px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    font-size: 15px;
+    outline: none;
+}
+
+.search-box:focus {
+    border-color: #888;
+}
+
+#status {
+    text-align: center;
+    margin: 20px 0;
+    color: #666;
+}
+
+.videos {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.video-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow:
+        0 5px 18px rgba(0,0,0,0.08);
+
+    transition:
+        transform 0.2s,
+        box-shadow 0.2s;
+}
+
+.video-card:hover {
+    transform: translateY(-4px);
+
+    box-shadow:
+        0 10px 25px rgba(0,0,0,0.12);
+}
+
+.thumbnail {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    display: block;
+}
+
+.video-content {
+    padding: 15px;
+}
+
+.video-title {
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 1.4;
+    margin-bottom: 8px;
+}
+
+.video-date {
+    color: #777;
+    font-size: 13px;
+    margin-bottom: 14px;
+}
+
+.video-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.watch-button {
+    background: #111;
+    color: white;
+}
+
+.youtube-button {
+    background: #ff0000;
+    color: white;
+}
+
+.like-button {
+    background: #ffecec;
+    color: #d60000;
+}
+
+.empty {
+    text-align: center;
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    color: #777;
+}
+
+.player-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.88);
+    z-index: 999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    overflow-y: auto;
+}
+
+.player-box {
+    width: 100%;
+    max-width: 1000px;
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.player-header {
+    padding: 14px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.close-player {
+    border: none;
+    background: #eee;
+    color: #222;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.player-video {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #000;
+}
+
+.player-video iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+.player-actions {
+    padding: 15px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.comments-section {
+    padding: 15px;
+    border-top: 1px solid #eee;
+}
+
+.comments-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.comment-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.comment-input {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    resize: vertical;
+    min-height: 45px;
+    font-family: inherit;
+}
+
+.comment-submit {
+    background: #222;
+    color: white;
+    align-self: flex-end;
+}
+
+.comment {
+    border-bottom: 1px solid #eee;
+    padding: 14px 0;
+}
+
+.comment-user {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.comment-text {
+    white-space: pre-wrap;
+    color: #444;
+}
+
+.comment-date {
+    color: #888;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.login-note {
+    padding: 12px;
+    background: #f5f7fb;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    color: #666;
+}
+
+.user-info {
+    margin-top: 10px;
+    font-size: 13px;
+    color: #666;
+}
+
+.loading {
+    text-align: center;
+    padding: 30px;
+    color: #777;
+}
+
+.error {
+    background: #ffecec;
+    color: #b00020;
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+@media (max-width: 600px) {
 
     .container {
-        width: 100%;
-        max-width: 1200px;
-        margin: auto;
-        padding: 20px;
-    }
-
-    .header {
-        background: white;
-        border-radius: 18px;
-        padding: 22px;
-        margin-bottom: 20px;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-        text-align: center;
+        padding: 12px;
     }
 
     .header h1 {
-        margin: 0 0 8px;
-        font-size: 28px;
-    }
-
-    .header p {
-        margin: 0 0 18px;
-        color: #666;
-    }
-
-    .buttons {
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-        flex-wrap: wrap;
-    }
-
-    button,
-    .youtube-button {
-        border: none;
-        padding: 11px 18px;
-        border-radius: 10px;
-        cursor: pointer;
-        font-size: 14px;
-        font-weight: bold;
-        text-decoration: none;
-        display: inline-block;
-    }
-
-    .channel-button {
-        background: #ff0000;
-        color: white;
-    }
-
-    .refresh-button {
-        background: #222;
-        color: white;
-    }
-
-    .search-box {
-        width: 100%;
-        padding: 13px 16px;
-        margin-top: 18px;
-        border: 1px solid #ddd;
-        border-radius: 12px;
-        font-size: 15px;
-        outline: none;
-    }
-
-    .search-box:focus {
-        border-color: #888;
-    }
-
-    #status {
-        text-align: center;
-        margin: 20px 0;
-        color: #666;
+        font-size: 23px;
     }
 
     .videos {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 20px;
+        grid-template-columns: 1fr;
     }
 
-    .video-card {
-        background: white;
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: 0 5px 18px rgba(0,0,0,0.08);
-        transition: transform 0.2s, box-shadow 0.2s;
+    .comment-form {
+        flex-direction: column;
     }
 
-    .video-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+    .comment-submit {
+        align-self: stretch;
     }
 
-    .thumbnail {
-        width: 100%;
-        aspect-ratio: 16 / 9;
-        object-fit: cover;
-        display: block;
-    }
+}
 
-    .video-content {
-        padding: 15px;
-    }
-
-    .video-title {
-        font-size: 16px;
-        font-weight: bold;
-        line-height: 1.4;
-        margin-bottom: 8px;
-    }
-
-    .video-date {
-        color: #777;
-        font-size: 13px;
-        margin-bottom: 14px;
-    }
-
-    .video-buttons {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-    }
-
-    .watch-button {
-        background: #111;
-        color: white;
-    }
-
-    .youtube-button {
-        background: #ff0000;
-        color: white;
-    }
-
-    .empty {
-        text-align: center;
-        background: white;
-        padding: 30px;
-        border-radius: 15px;
-        color: #777;
-    }
-
-    .loading {
-        text-align: center;
-        padding: 40px;
-        font-size: 16px;
-    }
-
-    @media (max-width: 600px) {
-        .container {
-            padding: 12px;
-        }
-
-        .header h1 {
-            font-size: 23px;
-        }
-
-        .videos {
-            grid-template-columns: 1fr;
-        }
-    }
 </style>
 </head>
 
@@ -188,7 +371,7 @@
 
     <div class="header">
 
-        <h1>🐦 Limon Boncuk Çicikuş</h1>
+        <h1>🐦 Limon Boncuk</h1>
 
         <p>YouTube kanalındaki videolar</p>
 
@@ -197,7 +380,8 @@
             <a
                 class="youtube-button channel-button"
                 href="https://www.youtube.com/@LimonBoncukCicikus"
-                target="_blank">
+                target="_blank"
+                rel="noopener">
                 📺 Kanala Git
             </a>
 
@@ -207,6 +391,26 @@
                 🔄 Yenile
             </button>
 
+            <button
+                id="loginButton"
+                class="login-button"
+                onclick="login()">
+                🔐 Google ile Giriş
+            </button>
+
+            <button
+                id="logoutButton"
+                class="logout-button"
+                onclick="logout()"
+                style="display:none;">
+                Çıkış
+            </button>
+
+        </div>
+
+        <div
+            id="userInfo"
+            class="user-info">
         </div>
 
         <input
@@ -222,223 +426,846 @@
         Videolar yükleniyor...
     </div>
 
-    <div id="videos" class="videos"></div>
+    <div
+        id="videos"
+        class="videos">
+    </div>
 
 </div>
 
 <script>
 
-    /*
-        ============================================================
-        AYARLAR
-        ============================================================
-    */
+/*
+============================================================
+API AYARLARI
+============================================================
+*/
 
-    const API_KEY = "AIzaSyBzTN3E8ZmWbtdXNXKH4Z5C_u2X1bFGiQg";
+/*
+  BURAYA YENİ VE KISITLANMIŞ API KEY'İNİ KOY.
 
-    const CHANNEL_HANDLE = "@LimonBoncukCicikus";
+  Eskisini kullanma.
+*/
 
-    const CHANNEL_URL =
-        "https://www.youtube.com/@LimonBoncukCicikus";
-
-
-    /*
-        ============================================================
-        GLOBAL DEĞİŞKENLER
-        ============================================================
-    */
-
-    let allVideos = [];
+const API_KEY =
+    "YENI_API_KEY_BURAYA";
 
 
-    /*
-        ============================================================
-        KANAL BİLGİSİNİ AL
-        ============================================================
-    */
+const CHANNEL_HANDLE =
+    "@LimonBoncukCicikus";
 
-    async function getChannel() {
 
-        const url =
-            "https://www.googleapis.com/youtube/v3/channels" +
-            "?part=contentDetails,snippet" +
-            "&forHandle=" + encodeURIComponent(CHANNEL_HANDLE) +
-            "&key=" + encodeURIComponent(API_KEY);
+const CHANNEL_URL =
+    "https://www.youtube.com/@LimonBoncukCicikus";
 
-        const response = await fetch(url);
 
-        if (!response.ok) {
-            throw new Error(
-                "Kanal bilgisi alınamadı. HTTP " +
-                response.status
-            );
-        }
+/*
+============================================================
+GOOGLE OAUTH
+============================================================
+*/
 
-        const data = await response.json();
+/*
+  Client ID gizli değildir.
+  client_secret BURAYA YAZILMAZ.
+*/
 
-        if (!data.items || data.items.length === 0) {
-            throw new Error("Kanal bulunamadı.");
-        }
+const GOOGLE_CLIENT_ID =
+    "748386770810-rae4e7u5ohtthimftign6ghmov87t0tq.apps.googleusercontent.com";
 
-        return data.items[0];
+
+/*
+  YouTube yorum ve beğeni işlemleri için gerekli scope.
+*/
+
+const YOUTUBE_SCOPE =
+    "https://www.googleapis.com/auth/youtube.force-ssl";
+
+
+let tokenClient = null;
+
+let accessToken = null;
+
+let currentVideoId = null;
+
+let allVideos = [];
+
+
+/*
+============================================================
+GOOGLE OAUTH CLIENT BAŞLAT
+============================================================
+*/
+
+function initializeOAuth() {
+
+    if (
+        typeof google === "undefined" ||
+        !google.accounts ||
+        !google.accounts.oauth2
+    ) {
+
+        setTimeout(
+            initializeOAuth,
+            500
+        );
+
+        return;
     }
 
+    tokenClient =
+        google.accounts.oauth2.initTokenClient({
 
-    /*
-        ============================================================
-        TÜM VİDEOLARI AL
-        ============================================================
-    */
+            client_id:
+                GOOGLE_CLIENT_ID,
 
-    async function getAllVideos(uploadPlaylistId) {
+            scope:
+                YOUTUBE_SCOPE,
 
-        let videos = [];
+            callback:
+                handleOAuthResponse
 
-        let nextPageToken = "";
+        });
 
-        do {
+}
 
-            let url =
-                "https://www.googleapis.com/youtube/v3/playlistItems" +
-                "?part=snippet,contentDetails" +
-                "&playlistId=" + encodeURIComponent(uploadPlaylistId) +
-                "&maxResults=50" +
-                "&key=" + encodeURIComponent(API_KEY);
 
-            if (nextPageToken) {
+/*
+============================================================
+GİRİŞ
+============================================================
+*/
 
-                url +=
-                    "&pageToken=" +
-                    encodeURIComponent(nextPageToken);
+function login() {
 
-            }
+    if (!tokenClient) {
 
-            const response = await fetch(url);
+        alert(
+            "Google giriş sistemi henüz hazır değil. " +
+            "Sayfayı yenileyip tekrar deneyin."
+        );
 
-            if (!response.ok) {
-                throw new Error(
-                    "Videolar alınamadı. HTTP " +
-                    response.status
+        return;
+    }
+
+    tokenClient.requestAccessToken({
+        prompt: "consent"
+    });
+
+}
+
+
+/*
+============================================================
+OAUTH CEVABI
+============================================================
+*/
+
+function handleOAuthResponse(response) {
+
+    if (
+        response.error ||
+        !response.access_token
+    ) {
+
+        console.error(
+            "OAuth hatası:",
+            response
+        );
+
+        alert(
+            "Google hesabıyla giriş başarısız oldu."
+        );
+
+        return;
+    }
+
+    accessToken =
+        response.access_token;
+
+    document
+        .getElementById("loginButton")
+        .style.display = "none";
+
+    document
+        .getElementById("logoutButton")
+        .style.display = "inline-block";
+
+    document
+        .getElementById("userInfo")
+        .textContent =
+        "✅ Google hesabıyla giriş yapıldı.";
+
+}
+
+
+/*
+============================================================
+ÇIKIŞ
+============================================================
+*/
+
+function logout() {
+
+    if (accessToken) {
+
+        google.accounts.oauth2.revoke(
+            accessToken
+        );
+
+    }
+
+    accessToken = null;
+
+    document
+        .getElementById("loginButton")
+        .style.display = "inline-block";
+
+    document
+        .getElementById("logoutButton")
+        .style.display = "none";
+
+    document
+        .getElementById("userInfo")
+        .textContent = "";
+
+}
+
+
+/*
+============================================================
+YETKİLİ YOUTUBE İSTEĞİ
+============================================================
+*/
+
+async function authorizedFetch(
+    url,
+    options = {}
+) {
+
+    if (!accessToken) {
+
+        throw new Error(
+            "AUTH_REQUIRED"
+        );
+
+    }
+
+    const headers = {
+
+        ...(options.headers || {}),
+
+        Authorization:
+            "Bearer " + accessToken,
+
+        "Content-Type":
+            "application/json"
+
+    };
+
+    return fetch(
+        url,
+        {
+            ...options,
+            headers
+        }
+    );
+
+}
+
+
+/*
+============================================================
+KANAL BİLGİSİ
+============================================================
+*/
+
+async function getChannel() {
+
+    const url =
+        "https://www.googleapis.com/youtube/v3/channels" +
+        "?part=contentDetails,snippet" +
+        "&forHandle=" +
+        encodeURIComponent(CHANNEL_HANDLE) +
+        "&key=" +
+        encodeURIComponent(API_KEY);
+
+    const response =
+        await fetch(url);
+
+    if (!response.ok) {
+
+        throw new Error(
+            "Kanal bilgisi alınamadı. HTTP " +
+            response.status
+        );
+
+    }
+
+    const data =
+        await response.json();
+
+    if (
+        !data.items ||
+        data.items.length === 0
+    ) {
+
+        throw new Error(
+            "Kanal bulunamadı."
+        );
+
+    }
+
+    return data.items[0];
+
+}
+
+
+/*
+============================================================
+TÜM VİDEOLAR
+============================================================
+*/
+
+async function getAllVideos(
+    uploadPlaylistId
+) {
+
+    let videos = [];
+
+    let nextPageToken = "";
+
+    do {
+
+        let url =
+            "https://www.googleapis.com/youtube/v3/playlistItems" +
+            "?part=snippet,contentDetails" +
+            "&playlistId=" +
+            encodeURIComponent(uploadPlaylistId) +
+            "&maxResults=50" +
+            "&key=" +
+            encodeURIComponent(API_KEY);
+
+        if (nextPageToken) {
+
+            url +=
+                "&pageToken=" +
+                encodeURIComponent(
+                    nextPageToken
                 );
-            }
 
-            const data = await response.json();
+        }
 
-            if (data.items) {
+        const response =
+            await fetch(url);
 
-                for (const item of data.items) {
+        if (!response.ok) {
 
-                    if (
-                        item.snippet &&
-                        item.contentDetails &&
-                        item.contentDetails.videoId
-                    ) {
+            throw new Error(
+                "Videolar alınamadı. HTTP " +
+                response.status
+            );
 
-                        videos.push({
+        }
 
-                            id: item.contentDetails.videoId,
+        const data =
+            await response.json();
 
-                            title:
-                                item.snippet.title,
+        if (data.items) {
 
-                            description:
-                                item.snippet.description,
+            for (
+                const item
+                of data.items
+            ) {
 
-                            date:
-                                item.snippet.publishedAt,
+                if (
+                    item.snippet &&
+                    item.contentDetails &&
+                    item.contentDetails.videoId
+                ) {
 
-                            thumbnail:
-                                item.snippet.thumbnails?.high?.url ||
-                                item.snippet.thumbnails?.medium?.url ||
-                                item.snippet.thumbnails?.default?.url
+                    videos.push({
 
-                        });
+                        id:
+                            item.contentDetails.videoId,
 
-                    }
+                        title:
+                            item.snippet.title,
+
+                        description:
+                            item.snippet.description,
+
+                        date:
+                            item.snippet.publishedAt,
+
+                        thumbnail:
+
+                            item.snippet
+                                .thumbnails
+                                ?.high
+                                ?.url ||
+
+                            item.snippet
+                                .thumbnails
+                                ?.medium
+                                ?.url ||
+
+                            item.snippet
+                                .thumbnails
+                                ?.default
+                                ?.url
+
+                    });
 
                 }
 
             }
 
-            nextPageToken =
-                data.nextPageToken || "";
-
-        } while (nextPageToken);
-
-        return videos;
-    }
-
-
-    /*
-        ============================================================
-        VİDEOLARI EKRANA BAS
-        ============================================================
-    */
-
-    function renderVideos(videos) {
-
-        const container =
-            document.getElementById("videos");
-
-        container.innerHTML = "";
-
-        if (!videos.length) {
-
-            container.innerHTML =
-                `<div class="empty">
-                    Gösterilecek video bulunamadı.
-                </div>`;
-
-            return;
         }
 
-        videos.forEach(video => {
+        nextPageToken =
+            data.nextPageToken || "";
 
-            const card =
-                document.createElement("div");
+    }
+    while (nextPageToken);
 
-            card.className = "video-card";
+    return videos;
 
-            const formattedDate =
-                new Date(video.date)
-                    .toLocaleDateString("tr-TR", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric"
-                    });
+}
 
-            card.innerHTML = `
 
-                <img
-                    class="thumbnail"
-                    src="${escapeHtml(video.thumbnail)}"
-                    alt="${escapeHtml(video.title)}"
-                    loading="lazy">
+/*
+============================================================
+VİDEOLAR GÖSTER
+============================================================
+*/
 
-                <div class="video-content">
+function renderVideos(videos) {
 
-                    <div class="video-title">
-                        ${escapeHtml(video.title)}
+    const container =
+        document.getElementById(
+            "videos"
+        );
+
+    container.innerHTML = "";
+
+    if (!videos.length) {
+
+        container.innerHTML = `
+            <div class="empty">
+                Gösterilecek video bulunamadı.
+            </div>
+        `;
+
+        return;
+    }
+
+    videos.forEach(video => {
+
+        const card =
+            document.createElement(
+                "div"
+            );
+
+        card.className =
+            "video-card";
+
+        const formattedDate =
+            new Date(
+                video.date
+            ).toLocaleDateString(
+                "tr-TR",
+                {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric"
+                }
+            );
+
+        card.innerHTML = `
+
+            <img
+                class="thumbnail"
+                src="${escapeHtml(video.thumbnail)}"
+                alt="${escapeHtml(video.title)}"
+                loading="lazy">
+
+            <div class="video-content">
+
+                <div class="video-title">
+                    ${escapeHtml(video.title)}
+                </div>
+
+                <div class="video-date">
+                    📅 ${formattedDate}
+                </div>
+
+                <div class="video-buttons">
+
+                    <button
+                        class="watch-button"
+                        onclick="openPlayer('${video.id}')">
+                        ▶️ Sitede İzle
+                    </button>
+
+                    <button
+                        class="like-button"
+                        onclick="likeVideo('${video.id}')">
+                        ❤️ Beğen
+                    </button>
+
+                    <a
+                        class="youtube-button"
+                        href="https://www.youtube.com/watch?v=${video.id}"
+                        target="_blank"
+                        rel="noopener">
+                        🔴 YouTube
+                    </a>
+
+                </div>
+
+            </div>
+        `;
+
+        container.appendChild(card);
+
+    });
+
+}
+
+
+/*
+============================================================
+PLAYER
+============================================================
+*/
+
+function openPlayer(
+    videoId
+) {
+
+    currentVideoId =
+        videoId;
+
+    const video =
+        allVideos.find(
+            item =>
+                item.id === videoId
+        );
+
+    const overlay =
+        document.createElement(
+            "div"
+        );
+
+    overlay.className =
+        "player-overlay";
+
+    overlay.innerHTML = `
+
+        <div class="player-box">
+
+            <div class="player-header">
+
+                <span>
+                    ${escapeHtml(
+                        video?.title ||
+                        "Video"
+                    )}
+                </span>
+
+                <button
+                    class="close-player"
+                    onclick="closePlayer()">
+                    ×
+                </button>
+
+            </div>
+
+
+            <div class="player-video">
+
+                <iframe
+                    src="https://www.youtube.com/embed/${videoId}?autoplay=1"
+                    allow="
+                        autoplay;
+                        encrypted-media;
+                        picture-in-picture;
+                        fullscreen
+                    "
+                    allowfullscreen>
+                </iframe>
+
+            </div>
+
+
+            <div class="player-actions">
+
+                <button
+                    class="like-button"
+                    onclick="likeVideo('${videoId}')">
+                    ❤️ Bu videoyu beğen
+                </button>
+
+                <a
+                    class="youtube-button"
+                    href="https://www.youtube.com/watch?v=${videoId}"
+                    target="_blank"
+                    rel="noopener">
+                    🔴 YouTube'da aç
+                </a>
+
+            </div>
+
+
+            <div class="comments-section">
+
+                <div class="comments-title">
+                    💬 Yorumlar
+                </div>
+
+                <div id="commentArea">
+
+                    <div class="loading">
+                        Yorumlar yükleniyor...
                     </div>
 
-                    <div class="video-date">
-                        📅 ${formattedDate}
+                </div>
+
+            </div>
+
+        </div>
+    `;
+
+    document.body.appendChild(
+        overlay
+    );
+
+    loadComments(videoId);
+
+}
+
+
+/*
+============================================================
+PLAYER KAPAT
+============================================================
+*/
+
+function closePlayer() {
+
+    const overlay =
+        document.querySelector(
+            ".player-overlay"
+        );
+
+    if (overlay) {
+
+        overlay.remove();
+
+    }
+
+    currentVideoId = null;
+
+}
+
+
+/*
+============================================================
+YORUMLARI GETİR
+============================================================
+*/
+
+async function loadComments(
+    videoId
+) {
+
+    const area =
+        document.getElementById(
+            "commentArea"
+        );
+
+    if (!area) {
+        return;
+    }
+
+    try {
+
+        const url =
+            "https://www.googleapis.com/youtube/v3/commentThreads" +
+            "?part=snippet" +
+            "&videoId=" +
+            encodeURIComponent(videoId) +
+            "&maxResults=20" +
+            "&textFormat=plainText" +
+            "&order=relevance" +
+            "&key=" +
+            encodeURIComponent(API_KEY);
+
+        const response =
+            await fetch(url);
+
+        const data =
+            await response.json();
+
+        if (!response.ok) {
+
+            throw new Error(
+                data?.error?.message ||
+                "Yorumlar alınamadı."
+            );
+
+        }
+
+        renderComments(
+            videoId,
+            data.items || []
+        );
+
+    }
+    catch (error) {
+
+        console.error(error);
+
+        area.innerHTML = `
+            <div class="error">
+                Yorumlar yüklenemedi.
+                <br><br>
+                ${escapeHtml(
+                    error.message
+                )}
+            </div>
+        `;
+
+    }
+
+}
+
+
+/*
+============================================================
+YORUMLARI GÖSTER
+============================================================
+*/
+
+function renderComments(
+    videoId,
+    comments
+) {
+
+    const area =
+        document.getElementById(
+            "commentArea"
+        );
+
+    if (!area) {
+        return;
+    }
+
+    let html = "";
+
+    if (accessToken) {
+
+        html += `
+
+            <div class="comment-form">
+
+                <textarea
+                    id="commentInput"
+                    class="comment-input"
+                    placeholder="Yorumunu yaz...">
+                </textarea>
+
+                <button
+                    class="comment-submit"
+                    onclick="sendComment('${videoId}')">
+                    Gönder
+                </button>
+
+            </div>
+
+        `;
+
+    }
+    else {
+
+        html += `
+
+            <div class="login-note">
+
+                💡 Yorum yapmak için
+                Google hesabınla giriş yap.
+
+                <br><br>
+
+                <button
+                    class="login-button"
+                    onclick="login()">
+                    🔐 Google ile Giriş
+                </button>
+
+            </div>
+
+        `;
+
+    }
+
+    if (!comments.length) {
+
+        html += `
+            <div class="empty">
+                Henüz gösterilecek yorum yok.
+            </div>
+        `;
+
+    }
+    else {
+
+        comments.forEach(thread => {
+
+            const snippet =
+                thread
+                    ?.snippet
+                    ?.topLevelComment
+                    ?.snippet;
+
+            if (!snippet) {
+                return;
+            }
+
+            html += `
+
+                <div class="comment">
+
+                    <div class="comment-user">
+
+                        ${escapeHtml(
+                            snippet
+                                .authorDisplayName
+                        )}
+
                     </div>
 
-                    <div class="video-buttons">
+                    <div class="comment-text">
 
-                        <button
-                            class="watch-button"
-                            onclick="openPlayer('${video.id}')">
-                            ▶️ Sitede İzle
-                        </button>
+                        ${escapeHtml(
+                            snippet
+                                .textDisplay ||
+                            snippet
+                                .textOriginal ||
+                            ""
+                        )}
 
-                        <a
-                            class="youtube-button"
-                            href="https://www.youtube.com/watch?v=${video.id}"
-                            target="_blank">
-                            🔴 YouTube
-                        </a>
+                    </div>
+
+                    <div class="comment-date">
+
+                        ${new Date(
+                            snippet
+                                .publishedAt
+                        ).toLocaleString(
+                            "tr-TR"
+                        )}
 
                     </div>
 
@@ -446,217 +1273,369 @@
 
             `;
 
-            container.appendChild(card);
-
         });
 
     }
 
+    area.innerHTML =
+        html;
 
-    /*
-        ============================================================
-        YOUTUBE OYNATICI
-        ============================================================
-    */
+}
 
-    function openPlayer(videoId) {
 
-        const overlay =
-            document.createElement("div");
+/*
+============================================================
+YORUM GÖNDER
+============================================================
+*/
 
-        overlay.style.position = "fixed";
-        overlay.style.inset = "0";
-        overlay.style.background = "rgba(0,0,0,0.85)";
-        overlay.style.zIndex = "999999";
-        overlay.style.display = "flex";
-        overlay.style.alignItems = "center";
-        overlay.style.justifyContent = "center";
-        overlay.style.padding = "20px";
+async function sendComment(
+    videoId
+) {
 
-        overlay.innerHTML = `
+    if (!accessToken) {
 
-            <div style="
-                width:100%;
-                max-width:1000px;
-                background:#000;
-                border-radius:15px;
-                overflow:hidden;
-                position:relative;
-            ">
+        login();
 
-                <button
-                    onclick="this.closest('.player-overlay').remove()"
-                    style="
-                        position:absolute;
-                        right:10px;
-                        top:10px;
-                        z-index:5;
-                        background:rgba(0,0,0,.7);
-                        color:white;
-                        border:none;
-                        border-radius:50%;
-                        width:40px;
-                        height:40px;
-                        font-size:20px;
-                        cursor:pointer;
-                    ">
-                    ×
-                </button>
-
-                <div style="
-                    position:relative;
-                    width:100%;
-                    aspect-ratio:16/9;
-                ">
-
-                    <iframe
-                        src="https://www.youtube.com/embed/${videoId}?autoplay=1"
-                        style="
-                            position:absolute;
-                            inset:0;
-                            width:100%;
-                            height:100%;
-                            border:0;
-                        "
-                        allow="
-                            autoplay;
-                            encrypted-media;
-                            picture-in-picture;
-                            fullscreen
-                        "
-                        allowfullscreen>
-                    </iframe>
-
-                </div>
-
-            </div>
-        `;
-
-        overlay.className =
-            "player-overlay";
-
-        document.body.appendChild(overlay);
+        return;
 
     }
 
+    const input =
+        document.getElementById(
+            "commentInput"
+        );
 
-    /*
-        ============================================================
-        ARAMA
-        ============================================================
-    */
+    if (!input) {
+        return;
+    }
 
-    function filterVideos() {
+    const text =
+        input.value.trim();
 
-        const search =
-            document
-                .getElementById("search")
-                .value
-                .toLowerCase()
-                .trim();
+    if (!text) {
 
-        if (!search) {
+        alert(
+            "Yorum yazmalısın."
+        );
 
-            renderVideos(allVideos);
-
-            return;
-        }
-
-        const filtered =
-            allVideos.filter(video =>
-                video.title
-                    .toLowerCase()
-                    .includes(search)
-            );
-
-        renderVideos(filtered);
+        return;
 
     }
 
+    try {
 
-    /*
-        ============================================================
-        GÜVENLİ HTML
-        ============================================================
-    */
+        const channel =
+            await getChannel();
 
-    function escapeHtml(text) {
+        const url =
+            "https://www.googleapis.com/youtube/v3/commentThreads" +
+            "?part=snippet";
 
-        const div =
-            document.createElement("div");
+        const body = {
 
-        div.textContent =
-            text;
+            snippet: {
 
-        return div.innerHTML;
-    }
+                channelId:
+                    channel.id,
 
+                videoId:
+                    videoId,
 
-    /*
-        ============================================================
-        ANA YÜKLEME
-        ============================================================
-    */
+                topLevelComment: {
 
-    async function loadVideos(showLoading = true) {
+                    snippet: {
 
-        const status =
-            document.getElementById("status");
+                        textOriginal:
+                            text
 
-        try {
+                    }
 
-            if (showLoading) {
-
-                status.innerHTML =
-                    "⏳ Videolar yükleniyor...";
+                }
 
             }
 
-            const channel =
-                await getChannel();
+        };
 
-            const uploadsPlaylist =
-                channel.contentDetails
-                    .relatedPlaylists
-                    .uploads;
+        const response =
+            await authorizedFetch(
+                url,
+                {
+                    method: "POST",
+                    body:
+                        JSON.stringify(body)
+                }
+            );
 
-            allVideos =
-                await getAllVideos(
-                    uploadsPlaylist
-                );
+        const data =
+            await response.json();
 
-            renderVideos(allVideos);
+        if (!response.ok) {
 
-            status.innerHTML =
-                `✅ ${allVideos.length} video bulundu`;
+            throw new Error(
+                data?.error?.message ||
+                "Yorum gönderilemedi."
+            );
+
+        }
+
+        input.value = "";
+
+        alert(
+            "✅ Yorum gönderildi!"
+        );
+
+        loadComments(
+            videoId
+        );
+
+    }
+    catch (error) {
+
+        console.error(error);
+
+        if (
+            error.message ===
+            "AUTH_REQUIRED"
+        ) {
+
+            login();
+
+            return;
 
         }
 
-        catch (error) {
-
-            console.error(error);
-
-            status.innerHTML =
-                `
-                ❌ Videolar yüklenemedi.<br><br>
-
-                <small>
-                    ${escapeHtml(error.message)}
-                </small>
-                `;
-
-        }
+        alert(
+            "Yorum gönderilemedi:\n\n" +
+            error.message
+        );
 
     }
 
+}
 
-    /*
-        ============================================================
-        BAŞLAT
-        ============================================================
-    */
 
-    loadVideos();
+/*
+============================================================
+VİDEOYU BEĞEN
+============================================================
+*/
+
+async function likeVideo(
+    videoId
+) {
+
+    if (!accessToken) {
+
+        alert(
+            "❤️ Beğenmek için önce Google hesabınla giriş yap."
+        );
+
+        login();
+
+        return;
+
+    }
+
+    try {
+
+        const url =
+            "https://www.googleapis.com/youtube/v3/videos/rate" +
+            "?id=" +
+            encodeURIComponent(videoId) +
+            "&rating=like";
+
+        const response =
+            await authorizedFetch(
+                url,
+                {
+                    method: "POST",
+                    body: undefined
+                }
+            );
+
+        if (!response.ok) {
+
+            let message =
+                "Video beğenilemedi.";
+
+            try {
+
+                const data =
+                    await response.json();
+
+                message =
+                    data?.error?.message ||
+                    message;
+
+            }
+            catch {}
+
+            throw new Error(
+                message
+            );
+
+        }
+
+        alert(
+            "❤️ Video beğenildi!"
+        );
+
+    }
+    catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Video beğenilemedi:\n\n" +
+            error.message
+        );
+
+    }
+
+}
+
+
+/*
+============================================================
+ARAMA
+============================================================
+*/
+
+function filterVideos() {
+
+    const search =
+        document
+            .getElementById(
+                "search"
+            )
+            .value
+            .toLowerCase()
+            .trim();
+
+    if (!search) {
+
+        renderVideos(
+            allVideos
+        );
+
+        return;
+
+    }
+
+    const filtered =
+        allVideos.filter(
+            video =>
+                video.title
+                    .toLowerCase()
+                    .includes(search)
+        );
+
+    renderVideos(
+        filtered
+    );
+
+}
+
+
+/*
+============================================================
+HTML ESCAPE
+============================================================
+*/
+
+function escapeHtml(
+    text
+) {
+
+    const div =
+        document.createElement(
+            "div"
+        );
+
+    div.textContent =
+        text ?? "";
+
+    return div.innerHTML;
+
+}
+
+
+/*
+============================================================
+ANA YÜKLEME
+============================================================
+*/
+
+async function loadVideos(
+    showLoading = true
+) {
+
+    const status =
+        document.getElementById(
+            "status"
+        );
+
+    try {
+
+        if (showLoading) {
+
+            status.innerHTML =
+                "⏳ Videolar yükleniyor...";
+
+        }
+
+        const channel =
+            await getChannel();
+
+        const uploadsPlaylist =
+            channel
+                .contentDetails
+                .relatedPlaylists
+                .uploads;
+
+        allVideos =
+            await getAllVideos(
+                uploadsPlaylist
+            );
+
+        renderVideos(
+            allVideos
+        );
+
+        status.innerHTML =
+            `✅ ${allVideos.length} video bulundu`;
+
+    }
+    catch (error) {
+
+        console.error(error);
+
+        status.innerHTML =
+            `
+                ❌ Videolar yüklenemedi.
+                <br><br>
+                <small>
+                    ${escapeHtml(
+                        error.message
+                    )}
+                </small>
+            `;
+
+    }
+
+}
+
+
+/*
+============================================================
+BAŞLAT
+============================================================
+*/
+
+initializeOAuth();
+
+loadVideos();
 
 </script>
 
