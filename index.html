@@ -10,7 +10,6 @@
 
 <title>Limon Boncuk - Videolar</title>
 
-<!-- Google Identity Services -->
 <script
     src="https://accounts.google.com/gsi/client"
     async
@@ -64,8 +63,7 @@ body {
 }
 
 button,
-.youtube-button,
-.login-button {
+.youtube-button {
     border: none;
     padding: 11px 18px;
     border-radius: 10px;
@@ -92,7 +90,7 @@ button,
 }
 
 .logout-button {
-    background: #e7e7e7;
+    background: #e8e8e8;
     color: #222;
 }
 
@@ -116,6 +114,12 @@ button,
     color: #666;
 }
 
+.user-info {
+    margin-top: 10px;
+    color: #555;
+    font-size: 13px;
+}
+
 .videos {
     display: grid;
     grid-template-columns:
@@ -127,9 +131,7 @@ button,
     background: white;
     border-radius: 16px;
     overflow: hidden;
-    box-shadow:
-        0 5px 18px rgba(0,0,0,0.08);
-
+    box-shadow: 0 5px 18px rgba(0,0,0,0.08);
     transition:
         transform 0.2s,
         box-shadow 0.2s;
@@ -183,8 +185,13 @@ button,
 }
 
 .like-button {
-    background: #ffecec;
-    color: #d60000;
+    background: #ffe9e9;
+    color: #d00000;
+}
+
+.comment-button {
+    background: #eeeeee;
+    color: #222;
 }
 
 .empty {
@@ -198,144 +205,188 @@ button,
 .player-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.88);
+
+    background:
+        rgba(0,0,0,0.88);
+
     z-index: 999999;
+
     display: flex;
     align-items: center;
     justify-content: center;
+
     padding: 15px;
+
     overflow-y: auto;
 }
 
 .player-box {
     width: 100%;
     max-width: 1000px;
+
     background: white;
-    border-radius: 15px;
+
+    border-radius: 16px;
+
     overflow: hidden;
 }
 
 .player-header {
     padding: 14px;
-    font-weight: bold;
+
     display: flex;
     align-items: center;
     justify-content: space-between;
+
+    font-weight: bold;
 }
 
 .close-player {
-    border: none;
-    background: #eee;
-    color: #222;
     width: 38px;
     height: 38px;
+
+    border: none;
+
     border-radius: 50%;
+
+    background: #eee;
+
     font-size: 22px;
+
     cursor: pointer;
 }
 
 .player-video {
     position: relative;
+
     width: 100%;
+
     aspect-ratio: 16 / 9;
-    background: #000;
+
+    background: black;
 }
 
 .player-video iframe {
     position: absolute;
+
     inset: 0;
+
     width: 100%;
     height: 100%;
+
     border: 0;
 }
 
 .player-actions {
     padding: 15px;
+
     display: flex;
+
     gap: 10px;
+
     flex-wrap: wrap;
 }
 
 .comments-section {
     padding: 15px;
-    border-top: 1px solid #eee;
+
+    border-top:
+        1px solid #eee;
 }
 
 .comments-title {
     font-size: 20px;
+
     font-weight: bold;
+
     margin-bottom: 15px;
 }
 
 .comment-form {
     display: flex;
+
     gap: 10px;
+
     margin-bottom: 20px;
 }
 
 .comment-input {
     flex: 1;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    resize: vertical;
+
     min-height: 45px;
+
+    padding: 12px;
+
+    border:
+        1px solid #ddd;
+
+    border-radius: 10px;
+
+    resize: vertical;
+
     font-family: inherit;
 }
 
 .comment-submit {
     background: #222;
     color: white;
-    align-self: flex-end;
 }
 
 .comment {
-    border-bottom: 1px solid #eee;
     padding: 14px 0;
+
+    border-bottom:
+        1px solid #eee;
 }
 
 .comment-user {
     font-weight: bold;
+
     margin-bottom: 5px;
 }
 
 .comment-text {
-    white-space: pre-wrap;
     color: #444;
+
+    white-space: pre-wrap;
 }
 
 .comment-date {
     color: #888;
+
     font-size: 12px;
+
     margin-top: 5px;
 }
 
 .login-note {
-    padding: 12px;
+    padding: 13px;
+
     background: #f5f7fb;
+
     border-radius: 10px;
+
     margin-bottom: 15px;
-    color: #666;
-}
 
-.user-info {
-    margin-top: 10px;
-    font-size: 13px;
     color: #666;
-}
-
-.loading {
-    text-align: center;
-    padding: 30px;
-    color: #777;
 }
 
 .error {
+    padding: 13px;
+
     background: #ffecec;
+
     color: #b00020;
-    padding: 12px;
+
     border-radius: 10px;
-    margin-bottom: 15px;
+}
+
+.loading {
+    padding: 25px;
+
+    text-align: center;
+
+    color: #777;
 }
 
 @media (max-width: 600px) {
@@ -356,13 +407,10 @@ button,
         flex-direction: column;
     }
 
-    .comment-submit {
-        align-self: stretch;
-    }
-
 }
 
 </style>
+
 </head>
 
 <body>
@@ -373,7 +421,9 @@ button,
 
         <h1>🐦 Limon Boncuk</h1>
 
-        <p>YouTube kanalındaki videolar</p>
+        <p>
+            YouTube kanalındaki videolar
+        </p>
 
         <div class="buttons">
 
@@ -394,7 +444,7 @@ button,
             <button
                 id="loginButton"
                 class="login-button"
-                onclick="login()">
+                onclick="manualLogin()">
                 🔐 Google ile Giriş
             </button>
 
@@ -422,9 +472,11 @@ button,
 
     </div>
 
+
     <div id="status">
         Videolar yükleniyor...
     </div>
+
 
     <div
         id="videos"
@@ -433,41 +485,39 @@ button,
 
 </div>
 
+
 <script>
 
 /*
 ============================================================
-API AYARLARI
+AYARLAR
 ============================================================
 */
 
-/*
-  BURAYA YENİ VE KISITLANMIŞ API KEY'İNİ KOY.
 
-  Eskisini kullanma.
+/*
+    YENİ API KEY'İNİ BURAYA KOY.
+
+    Daha önce paylaştığın anahtarı kullanma.
 */
 
 const API_KEY =
     "AIzaSyAtpKHzGqF1_WGA1fS_2CmnNAVb7Mo0ZpQ";
 
 
+/*
+    YouTube kanal handle'ı
+*/
+
 const CHANNEL_HANDLE =
     "@LimonBoncukCicikus";
 
 
-const CHANNEL_URL =
-    "https://www.youtube.com/@LimonBoncukCicikus";
-
-
 /*
-============================================================
-GOOGLE OAUTH
-============================================================
-*/
+    Google OAuth Client ID
 
-/*
-  Client ID gizli değildir.
-  client_secret BURAYA YAZILMAZ.
+    Client ID gizli değildir.
+    client_secret BURAYA KOYULMAZ.
 */
 
 const GOOGLE_CLIENT_ID =
@@ -475,25 +525,80 @@ const GOOGLE_CLIENT_ID =
 
 
 /*
-  YouTube yorum ve beğeni işlemleri için gerekli scope.
+    OAuth kapsamı.
+
+    Yorum yazma ve video beğenme için gerekir.
 */
 
 const YOUTUBE_SCOPE =
     "https://www.googleapis.com/auth/youtube.force-ssl";
 
 
-let tokenClient = null;
+/*
+============================================================
+GLOBAL DEĞİŞKENLER
+============================================================
+*/
+
+let allVideos = [];
 
 let accessToken = null;
 
-let currentVideoId = null;
+let tokenClient = null;
 
-let allVideos = [];
+let currentVideoId = null;
 
 
 /*
 ============================================================
-GOOGLE OAUTH CLIENT BAŞLAT
+LOCAL STORAGE
+============================================================
+*/
+
+/*
+    Burada TOKEN saklamıyoruz.
+
+    Sadece bu tarayıcıda kullanıcının daha önce
+    Google yetkisi verdiğini belirten bilgi tutuluyor.
+*/
+
+const LOGIN_STORAGE_KEY =
+    "limonboncuk_google_authorized";
+
+
+function wasPreviouslyAuthorized() {
+
+    return (
+        localStorage.getItem(
+            LOGIN_STORAGE_KEY
+        ) === "true"
+    );
+
+}
+
+
+function setPreviouslyAuthorized() {
+
+    localStorage.setItem(
+        LOGIN_STORAGE_KEY,
+        "true"
+    );
+
+}
+
+
+function clearAuthorizationMemory() {
+
+    localStorage.removeItem(
+        LOGIN_STORAGE_KEY
+    );
+
+}
+
+
+/*
+============================================================
+GOOGLE IDENTITY SERVICES BAŞLAT
 ============================================================
 */
 
@@ -507,11 +612,13 @@ function initializeOAuth() {
 
         setTimeout(
             initializeOAuth,
-            500
+            300
         );
 
         return;
+
     }
+
 
     tokenClient =
         google.accounts.oauth2.initTokenClient({
@@ -527,26 +634,72 @@ function initializeOAuth() {
 
         });
 
+
+    /*
+        Kullanıcı daha önce giriş yaptıysa
+        sessiz giriş deniyoruz.
+    */
+
+    if (
+        wasPreviouslyAuthorized()
+    ) {
+
+        silentLogin();
+
+    }
+
 }
 
 
 /*
 ============================================================
-GİRİŞ
+SESSİZ GİRİŞ
 ============================================================
 */
 
-function login() {
+function silentLogin() {
+
+    if (!tokenClient) {
+        return;
+    }
+
+
+    /*
+        prompt:none:
+
+        Kullanıcı daha önce izin verdiyse
+        izin ekranı göstermeden token istemeyi dener.
+
+        Başarısız olursa kullanıcıya hata
+        göstermiyoruz.
+    */
+
+    tokenClient.requestAccessToken({
+        prompt: "none"
+    });
+
+}
+
+
+/*
+============================================================
+MANUEL GİRİŞ
+============================================================
+*/
+
+function manualLogin() {
 
     if (!tokenClient) {
 
         alert(
-            "Google giriş sistemi henüz hazır değil. " +
-            "Sayfayı yenileyip tekrar deneyin."
+            "Google giriş sistemi hazırlanıyor. " +
+            "Bir saniye sonra tekrar deneyin."
         );
 
         return;
+
     }
+
 
     tokenClient.requestAccessToken({
         prompt: "consent"
@@ -561,40 +714,122 @@ OAUTH CEVABI
 ============================================================
 */
 
-function handleOAuthResponse(response) {
+function handleOAuthResponse(
+    response
+) {
+
+    console.log(
+        "OAuth response:",
+        response
+    );
+
+
+    /*
+        Sessiz giriş başarısız olabilir.
+
+        Bu durumda kullanıcıyı rahatsız etmiyoruz.
+    */
 
     if (
         response.error ||
         !response.access_token
     ) {
 
-        console.error(
-            "OAuth hatası:",
-            response
+        console.log(
+            "Sessiz Google girişi başarısız:",
+            response.error
         );
 
-        alert(
-            "Google hesabıyla giriş başarısız oldu."
-        );
+        accessToken = null;
 
         return;
+
     }
+
+
+    /*
+        TOKEN SADECE RAM'DE TUTULUYOR.
+    */
 
     accessToken =
         response.access_token;
 
-    document
-        .getElementById("loginButton")
-        .style.display = "none";
 
-    document
-        .getElementById("logoutButton")
-        .style.display = "inline-block";
+    /*
+        Daha önce başarılı giriş yapıldığını
+        localStorage'ye kaydediyoruz.
+    */
 
-    document
-        .getElementById("userInfo")
-        .textContent =
-        "✅ Google hesabıyla giriş yapıldı.";
+    setPreviouslyAuthorized();
+
+
+    updateLoginUI();
+
+
+    /*
+        Kullanıcı video penceresini açmışsa
+        yorumları yeniden yükle.
+    */
+
+    if (currentVideoId) {
+
+        loadComments(
+            currentVideoId
+        );
+
+    }
+
+}
+
+
+/*
+============================================================
+GİRİŞ ARAYÜZÜ
+============================================================
+*/
+
+function updateLoginUI() {
+
+    const loginButton =
+        document.getElementById(
+            "loginButton"
+        );
+
+    const logoutButton =
+        document.getElementById(
+            "logoutButton"
+        );
+
+    const userInfo =
+        document.getElementById(
+            "userInfo"
+        );
+
+
+    if (accessToken) {
+
+        loginButton.style.display =
+            "none";
+
+        logoutButton.style.display =
+            "inline-block";
+
+        userInfo.textContent =
+            "✅ Google hesabıyla giriş yapıldı.";
+
+    }
+    else {
+
+        loginButton.style.display =
+            "inline-block";
+
+        logoutButton.style.display =
+            "none";
+
+        userInfo.textContent =
+            "";
+
+    }
 
 }
 
@@ -607,34 +842,45 @@ function handleOAuthResponse(response) {
 
 function logout() {
 
-    if (accessToken) {
+    if (
+        accessToken &&
+        typeof google !== "undefined" &&
+        google.accounts &&
+        google.accounts.oauth2
+    ) {
 
         google.accounts.oauth2.revoke(
-            accessToken
+            accessToken,
+            () => {
+
+                console.log(
+                    "Google yetkisi iptal edildi."
+                );
+
+            }
         );
 
     }
 
+
     accessToken = null;
 
-    document
-        .getElementById("loginButton")
-        .style.display = "inline-block";
 
-    document
-        .getElementById("logoutButton")
-        .style.display = "none";
+    /*
+        Otomatik giriş bilgisini de siliyoruz.
+    */
 
-    document
-        .getElementById("userInfo")
-        .textContent = "";
+    clearAuthorizationMemory();
+
+
+    updateLoginUI();
 
 }
 
 
 /*
 ============================================================
-YETKİLİ YOUTUBE İSTEĞİ
+YETKİLİ API İSTEĞİ
 ============================================================
 */
 
@@ -651,17 +897,36 @@ async function authorizedFetch(
 
     }
 
+
     const headers = {
 
         ...(options.headers || {}),
 
         Authorization:
-            "Bearer " + accessToken,
-
-        "Content-Type":
-            "application/json"
+            "Bearer " +
+            accessToken
 
     };
+
+
+    /*
+        GET isteklerinde Content-Type
+        zorunlu değil.
+
+        POST işlemlerinde ekleniyor.
+    */
+
+    if (
+        options.body !== undefined
+    ) {
+
+        headers[
+            "Content-Type"
+        ] =
+            "application/json";
+
+    }
+
 
     return fetch(
         url,
@@ -686,24 +951,33 @@ async function getChannel() {
         "https://www.googleapis.com/youtube/v3/channels" +
         "?part=contentDetails,snippet" +
         "&forHandle=" +
-        encodeURIComponent(CHANNEL_HANDLE) +
+        encodeURIComponent(
+            CHANNEL_HANDLE
+        ) +
         "&key=" +
-        encodeURIComponent(API_KEY);
+        encodeURIComponent(
+            API_KEY
+        );
+
 
     const response =
         await fetch(url);
 
+
+    const data =
+        await response.json();
+
+
     if (!response.ok) {
 
         throw new Error(
+            data?.error?.message ||
             "Kanal bilgisi alınamadı. HTTP " +
             response.status
         );
 
     }
 
-    const data =
-        await response.json();
 
     if (
         !data.items ||
@@ -716,6 +990,7 @@ async function getChannel() {
 
     }
 
+
     return data.items[0];
 
 }
@@ -723,7 +998,7 @@ async function getChannel() {
 
 /*
 ============================================================
-TÜM VİDEOLAR
+TÜM VİDEOLARI AL
 ============================================================
 */
 
@@ -735,16 +1010,22 @@ async function getAllVideos(
 
     let nextPageToken = "";
 
+
     do {
 
         let url =
             "https://www.googleapis.com/youtube/v3/playlistItems" +
             "?part=snippet,contentDetails" +
             "&playlistId=" +
-            encodeURIComponent(uploadPlaylistId) +
+            encodeURIComponent(
+                uploadPlaylistId
+            ) +
             "&maxResults=50" +
             "&key=" +
-            encodeURIComponent(API_KEY);
+            encodeURIComponent(
+                API_KEY
+            );
+
 
         if (nextPageToken) {
 
@@ -756,78 +1037,85 @@ async function getAllVideos(
 
         }
 
+
         const response =
             await fetch(url);
+
+
+        const data =
+            await response.json();
+
 
         if (!response.ok) {
 
             throw new Error(
+                data?.error?.message ||
                 "Videolar alınamadı. HTTP " +
                 response.status
             );
 
         }
 
-        const data =
-            await response.json();
 
         if (data.items) {
 
-            for (
-                const item
-                of data.items
-            ) {
+            data.items.forEach(
+                item => {
 
-                if (
-                    item.snippet &&
-                    item.contentDetails &&
-                    item.contentDetails.videoId
-                ) {
+                    if (
+                        item.snippet &&
+                        item.contentDetails &&
+                        item.contentDetails.videoId
+                    ) {
 
-                    videos.push({
+                        videos.push({
 
-                        id:
-                            item.contentDetails.videoId,
+                            id:
+                                item.contentDetails.videoId,
 
-                        title:
-                            item.snippet.title,
+                            title:
+                                item.snippet.title,
 
-                        description:
-                            item.snippet.description,
+                            description:
+                                item.snippet.description,
 
-                        date:
-                            item.snippet.publishedAt,
+                            date:
+                                item.snippet.publishedAt,
 
-                        thumbnail:
+                            thumbnail:
 
-                            item.snippet
-                                .thumbnails
-                                ?.high
-                                ?.url ||
+                                item.snippet
+                                    .thumbnails
+                                    ?.high
+                                    ?.url ||
 
-                            item.snippet
-                                .thumbnails
-                                ?.medium
-                                ?.url ||
+                                item.snippet
+                                    .thumbnails
+                                    ?.medium
+                                    ?.url ||
 
-                            item.snippet
-                                .thumbnails
-                                ?.default
-                                ?.url
+                                item.snippet
+                                    .thumbnails
+                                    ?.default
+                                    ?.url
 
-                    });
+                        });
+
+                    }
 
                 }
-
-            }
+            );
 
         }
+
 
         nextPageToken =
             data.nextPageToken || "";
 
+
     }
     while (nextPageToken);
+
 
     return videos;
 
@@ -836,18 +1124,22 @@ async function getAllVideos(
 
 /*
 ============================================================
-VİDEOLAR GÖSTER
+VİDEOLARI GÖSTER
 ============================================================
 */
 
-function renderVideos(videos) {
+function renderVideos(
+    videos
+) {
 
     const container =
         document.getElementById(
             "videos"
         );
 
+
     container.innerHTML = "";
+
 
     if (!videos.length) {
 
@@ -858,85 +1150,117 @@ function renderVideos(videos) {
         `;
 
         return;
+
     }
 
-    videos.forEach(video => {
 
-        const card =
-            document.createElement(
-                "div"
+    videos.forEach(
+        video => {
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+
+            card.className =
+                "video-card";
+
+
+            const date =
+                new Date(
+                    video.date
+                ).toLocaleDateString(
+                    "tr-TR",
+                    {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric"
+                    }
+                );
+
+
+            card.innerHTML = `
+
+                <img
+                    class="thumbnail"
+                    src="${escapeHtml(
+                        video.thumbnail
+                    )}"
+                    alt="${escapeHtml(
+                        video.title
+                    )}"
+                    loading="lazy">
+
+
+                <div class="video-content">
+
+                    <div class="video-title">
+
+                        ${escapeHtml(
+                            video.title
+                        )}
+
+                    </div>
+
+
+                    <div class="video-date">
+
+                        📅 ${date}
+
+                    </div>
+
+
+                    <div class="video-buttons">
+
+                        <button
+                            class="watch-button"
+                            onclick="openPlayer('${video.id}')">
+
+                            ▶️ Sitede İzle
+
+                        </button>
+
+
+                        <button
+                            class="like-button"
+                            onclick="likeVideo('${video.id}')">
+
+                            ❤️ Beğen
+
+                        </button>
+
+
+                        <a
+                            class="youtube-button"
+                            href="https://www.youtube.com/watch?v=${video.id}"
+                            target="_blank"
+                            rel="noopener">
+
+                            🔴 YouTube
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            `;
+
+
+            container.appendChild(
+                card
             );
 
-        card.className =
-            "video-card";
-
-        const formattedDate =
-            new Date(
-                video.date
-            ).toLocaleDateString(
-                "tr-TR",
-                {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric"
-                }
-            );
-
-        card.innerHTML = `
-
-            <img
-                class="thumbnail"
-                src="${escapeHtml(video.thumbnail)}"
-                alt="${escapeHtml(video.title)}"
-                loading="lazy">
-
-            <div class="video-content">
-
-                <div class="video-title">
-                    ${escapeHtml(video.title)}
-                </div>
-
-                <div class="video-date">
-                    📅 ${formattedDate}
-                </div>
-
-                <div class="video-buttons">
-
-                    <button
-                        class="watch-button"
-                        onclick="openPlayer('${video.id}')">
-                        ▶️ Sitede İzle
-                    </button>
-
-                    <button
-                        class="like-button"
-                        onclick="likeVideo('${video.id}')">
-                        ❤️ Beğen
-                    </button>
-
-                    <a
-                        class="youtube-button"
-                        href="https://www.youtube.com/watch?v=${video.id}"
-                        target="_blank"
-                        rel="noopener">
-                        🔴 YouTube
-                    </a>
-
-                </div>
-
-            </div>
-        `;
-
-        container.appendChild(card);
-
-    });
+        }
+    );
 
 }
 
 
 /*
 ============================================================
-PLAYER
+VİDEO OYNATICI
 ============================================================
 */
 
@@ -947,19 +1271,24 @@ function openPlayer(
     currentVideoId =
         videoId;
 
+
     const video =
         allVideos.find(
             item =>
-                item.id === videoId
+                item.id ===
+                videoId
         );
+
 
     const overlay =
         document.createElement(
             "div"
         );
 
+
     overlay.className =
         "player-overlay";
+
 
     overlay.innerHTML = `
 
@@ -974,10 +1303,13 @@ function openPlayer(
                     )}
                 </span>
 
+
                 <button
                     class="close-player"
                     onclick="closePlayer()">
+
                     ×
+
                 </button>
 
             </div>
@@ -1004,15 +1336,20 @@ function openPlayer(
                 <button
                     class="like-button"
                     onclick="likeVideo('${videoId}')">
-                    ❤️ Bu videoyu beğen
+
+                    ❤️ Videoyu Beğen
+
                 </button>
+
 
                 <a
                     class="youtube-button"
                     href="https://www.youtube.com/watch?v=${videoId}"
                     target="_blank"
                     rel="noopener">
-                    🔴 YouTube'da aç
+
+                    🔴 YouTube'da Aç
+
                 </a>
 
             </div>
@@ -1021,13 +1358,18 @@ function openPlayer(
             <div class="comments-section">
 
                 <div class="comments-title">
+
                     💬 Yorumlar
+
                 </div>
+
 
                 <div id="commentArea">
 
                     <div class="loading">
+
                         Yorumlar yükleniyor...
+
                     </div>
 
                 </div>
@@ -1035,13 +1377,18 @@ function openPlayer(
             </div>
 
         </div>
+
     `;
+
 
     document.body.appendChild(
         overlay
     );
 
-    loadComments(videoId);
+
+    loadComments(
+        videoId
+    );
 
 }
 
@@ -1059,20 +1406,23 @@ function closePlayer() {
             ".player-overlay"
         );
 
+
     if (overlay) {
 
         overlay.remove();
 
     }
 
-    currentVideoId = null;
+
+    currentVideoId =
+        null;
 
 }
 
 
 /*
 ============================================================
-YORUMLARI GETİR
+YORUMLARI AL
 ============================================================
 */
 
@@ -1085,9 +1435,11 @@ async function loadComments(
             "commentArea"
         );
 
+
     if (!area) {
         return;
     }
+
 
     try {
 
@@ -1095,18 +1447,25 @@ async function loadComments(
             "https://www.googleapis.com/youtube/v3/commentThreads" +
             "?part=snippet" +
             "&videoId=" +
-            encodeURIComponent(videoId) +
+            encodeURIComponent(
+                videoId
+            ) +
             "&maxResults=20" +
             "&textFormat=plainText" +
             "&order=relevance" +
             "&key=" +
-            encodeURIComponent(API_KEY);
+            encodeURIComponent(
+                API_KEY
+            );
+
 
         const response =
             await fetch(url);
 
+
         const data =
             await response.json();
+
 
         if (!response.ok) {
 
@@ -1116,6 +1475,7 @@ async function loadComments(
             );
 
         }
+
 
         renderComments(
             videoId,
@@ -1127,14 +1487,21 @@ async function loadComments(
 
         console.error(error);
 
+
         area.innerHTML = `
+
             <div class="error">
+
                 Yorumlar yüklenemedi.
+
                 <br><br>
+
                 ${escapeHtml(
                     error.message
                 )}
+
             </div>
+
         `;
 
     }
@@ -1158,11 +1525,14 @@ function renderComments(
             "commentArea"
         );
 
+
     if (!area) {
         return;
     }
 
+
     let html = "";
+
 
     if (accessToken) {
 
@@ -1176,10 +1546,13 @@ function renderComments(
                     placeholder="Yorumunu yaz...">
                 </textarea>
 
+
                 <button
                     class="comment-submit"
                     onclick="sendComment('${videoId}')">
+
                     Gönder
+
                 </button>
 
             </div>
@@ -1193,15 +1566,17 @@ function renderComments(
 
             <div class="login-note">
 
-                💡 Yorum yapmak için
-                Google hesabınla giriş yap.
+                💬 Yorum yazmak veya ❤️ beğenmek
+                için Google hesabınla giriş yap.
 
                 <br><br>
 
                 <button
                     class="login-button"
-                    onclick="login()">
+                    onclick="manualLogin()">
+
                     🔐 Google ile Giriş
+
                 </button>
 
             </div>
@@ -1210,72 +1585,84 @@ function renderComments(
 
     }
 
+
     if (!comments.length) {
 
         html += `
+
             <div class="empty">
+
                 Henüz gösterilecek yorum yok.
+
             </div>
+
         `;
 
     }
     else {
 
-        comments.forEach(thread => {
+        comments.forEach(
+            thread => {
 
-            const snippet =
-                thread
-                    ?.snippet
-                    ?.topLevelComment
-                    ?.snippet;
+                const snippet =
+                    thread
+                        ?.snippet
+                        ?.topLevelComment
+                        ?.snippet;
 
-            if (!snippet) {
-                return;
+
+                if (!snippet) {
+                    return;
+                }
+
+
+                html += `
+
+                    <div class="comment">
+
+                        <div class="comment-user">
+
+                            ${escapeHtml(
+                                snippet
+                                    .authorDisplayName
+                            )}
+
+                        </div>
+
+
+                        <div class="comment-text">
+
+                            ${escapeHtml(
+                                snippet
+                                    .textDisplay ||
+                                snippet
+                                    .textOriginal ||
+                                ""
+                            )}
+
+                        </div>
+
+
+                        <div class="comment-date">
+
+                            ${new Date(
+                                snippet
+                                    .publishedAt
+                            ).toLocaleString(
+                                "tr-TR"
+                            )}
+
+                        </div>
+
+                    </div>
+
+                `;
+
             }
-
-            html += `
-
-                <div class="comment">
-
-                    <div class="comment-user">
-
-                        ${escapeHtml(
-                            snippet
-                                .authorDisplayName
-                        )}
-
-                    </div>
-
-                    <div class="comment-text">
-
-                        ${escapeHtml(
-                            snippet
-                                .textDisplay ||
-                            snippet
-                                .textOriginal ||
-                            ""
-                        )}
-
-                    </div>
-
-                    <div class="comment-date">
-
-                        ${new Date(
-                            snippet
-                                .publishedAt
-                        ).toLocaleString(
-                            "tr-TR"
-                        )}
-
-                    </div>
-
-                </div>
-
-            `;
-
-        });
+        );
 
     }
+
 
     area.innerHTML =
         html;
@@ -1295,23 +1682,27 @@ async function sendComment(
 
     if (!accessToken) {
 
-        login();
+        manualLogin();
 
         return;
 
     }
+
 
     const input =
         document.getElementById(
             "commentInput"
         );
 
+
     if (!input) {
         return;
     }
 
+
     const text =
         input.value.trim();
+
 
     if (!text) {
 
@@ -1323,14 +1714,17 @@ async function sendComment(
 
     }
 
+
     try {
 
         const channel =
             await getChannel();
 
+
         const url =
             "https://www.googleapis.com/youtube/v3/commentThreads" +
             "?part=snippet";
+
 
         const body = {
 
@@ -1357,18 +1751,24 @@ async function sendComment(
 
         };
 
+
         const response =
             await authorizedFetch(
                 url,
                 {
                     method: "POST",
+
                     body:
-                        JSON.stringify(body)
+                        JSON.stringify(
+                            body
+                        )
                 }
             );
 
+
         const data =
             await response.json();
+
 
         if (!response.ok) {
 
@@ -1379,31 +1779,32 @@ async function sendComment(
 
         }
 
+
         input.value = "";
 
-        alert(
-            "✅ Yorum gönderildi!"
-        );
 
-        loadComments(
+        await loadComments(
             videoId
         );
+
 
     }
     catch (error) {
 
         console.error(error);
 
+
         if (
             error.message ===
             "AUTH_REQUIRED"
         ) {
 
-            login();
+            manualLogin();
 
             return;
 
         }
+
 
         alert(
             "Yorum gönderilemedi:\n\n" +
@@ -1427,55 +1828,49 @@ async function likeVideo(
 
     if (!accessToken) {
 
-        alert(
-            "❤️ Beğenmek için önce Google hesabınla giriş yap."
-        );
-
-        login();
+        manualLogin();
 
         return;
 
     }
+
 
     try {
 
         const url =
             "https://www.googleapis.com/youtube/v3/videos/rate" +
             "?id=" +
-            encodeURIComponent(videoId) +
+            encodeURIComponent(
+                videoId
+            ) +
             "&rating=like";
+
 
         const response =
             await authorizedFetch(
                 url,
                 {
-                    method: "POST",
-                    body: undefined
+                    method: "POST"
                 }
             );
 
+
         if (!response.ok) {
 
-            let message =
-                "Video beğenilemedi.";
+            const data =
+                await response.json()
+                    .catch(
+                        () => null
+                    );
 
-            try {
-
-                const data =
-                    await response.json();
-
-                message =
-                    data?.error?.message ||
-                    message;
-
-            }
-            catch {}
 
             throw new Error(
-                message
+                data?.error?.message ||
+                "Video beğenilemedi."
             );
 
         }
+
 
         alert(
             "❤️ Video beğenildi!"
@@ -1485,6 +1880,19 @@ async function likeVideo(
     catch (error) {
 
         console.error(error);
+
+
+        if (
+            error.message ===
+            "AUTH_REQUIRED"
+        ) {
+
+            manualLogin();
+
+            return;
+
+        }
+
 
         alert(
             "Video beğenilemedi:\n\n" +
@@ -1513,6 +1921,7 @@ function filterVideos() {
             .toLowerCase()
             .trim();
 
+
     if (!search) {
 
         renderVideos(
@@ -1523,13 +1932,17 @@ function filterVideos() {
 
     }
 
+
     const filtered =
         allVideos.filter(
             video =>
                 video.title
                     .toLowerCase()
-                    .includes(search)
+                    .includes(
+                        search
+                    )
         );
+
 
     renderVideos(
         filtered
@@ -1540,7 +1953,7 @@ function filterVideos() {
 
 /*
 ============================================================
-HTML ESCAPE
+HTML GÜVENLİĞİ
 ============================================================
 */
 
@@ -1553,8 +1966,10 @@ function escapeHtml(
             "div"
         );
 
+
     div.textContent =
         text ?? "";
+
 
     return div.innerHTML;
 
@@ -1563,7 +1978,7 @@ function escapeHtml(
 
 /*
 ============================================================
-ANA YÜKLEME
+VİDEOLARI YÜKLE
 ============================================================
 */
 
@@ -1576,17 +1991,20 @@ async function loadVideos(
             "status"
         );
 
+
     try {
 
         if (showLoading) {
 
-            status.innerHTML =
+            status.textContent =
                 "⏳ Videolar yükleniyor...";
 
         }
 
+
         const channel =
             await getChannel();
+
 
         const uploadsPlaylist =
             channel
@@ -1594,16 +2012,19 @@ async function loadVideos(
                 .relatedPlaylists
                 .uploads;
 
+
         allVideos =
             await getAllVideos(
                 uploadsPlaylist
             );
 
+
         renderVideos(
             allVideos
         );
 
-        status.innerHTML =
+
+        status.textContent =
             `✅ ${allVideos.length} video bulundu`;
 
     }
@@ -1611,16 +2032,20 @@ async function loadVideos(
 
         console.error(error);
 
-        status.innerHTML =
-            `
-                ❌ Videolar yüklenemedi.
-                <br><br>
-                <small>
-                    ${escapeHtml(
-                        error.message
-                    )}
-                </small>
-            `;
+
+        status.innerHTML = `
+
+            ❌ Videolar yüklenemedi.
+
+            <br><br>
+
+            <small>
+                ${escapeHtml(
+                    error.message
+                )}
+            </small>
+
+        `;
 
     }
 
@@ -1629,13 +2054,35 @@ async function loadVideos(
 
 /*
 ============================================================
-BAŞLAT
+BAŞLANGIÇ
 ============================================================
 */
 
-initializeOAuth();
+/*
+    OAuth başlatılır ama kullanıcı daha önce
+    yetki vermediyse hiçbir izin ekranı açılmaz.
+
+    Önce videolar yüklenir.
+*/
 
 loadVideos();
+
+
+/*
+    Google Identity Services hazır olduğunda
+    OAuth sistemi başlatılır.
+
+    Daha önce yetki verilmişse sessiz giriş denenir.
+*/
+
+window.addEventListener(
+    "load",
+    () => {
+
+        initializeOAuth();
+
+    }
+);
 
 </script>
 
